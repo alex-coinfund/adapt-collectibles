@@ -20,6 +20,7 @@
 		"bip39": "^2.5.0",
 		"bluebird": "^3.5.1",
 		"ethereumjs-wallet": "^0.6.0",
+		"ethjs-abi": "^0.2.1",
 		"truffle-hdwallet-provider": "^0.0.3",
 		"web3": "^0.20.3",
 		"web3-provider-engine": "^13.6.6"

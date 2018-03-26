@@ -4,17 +4,19 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-declare -a zeppelin_tests=(
+declare -a ZEPPELIN_TESTS=(
 "../zeppelin/test/ownership/Ownable.test.js"
+"../zeppelin/test/token/ERC721/ERC721BasicToken.test.js"
+"../zeppelin/test/token/ERC721/ERC721Token.test.js"
 )
 
 RESULT=0
-for file in ${zeppelin_tests[@]} ; do
+for file in ${ZEPPELIN_TESTS[@]} ; do
 	if [ ${RESULT} -eq 0 ]; then
-		js=`pwd`/${file}
-		printf "${GREEN}Testing: ${js}${NC}\n"
+		TEST_PATH=`pwd`/${file}
+		printf "${GREEN}Testing: ${TEST_PATH}${NC}\n"
 
-		./run-test.sh ${js}
+		./run-test.sh ${TEST_PATH}
 		RESULT=$?
 	fi
 done
