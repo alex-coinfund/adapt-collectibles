@@ -33,6 +33,12 @@ contract Collectibles is Ownable, ERC721Token {
 		super._mint(_to, _tokenId);
 	}
 
+	function massMint(address[] _to, uint256 []_tokenId) public onlyAdmin {
+		for(uint32 index=0; index<_to.length; index++) {
+			super._mint(_to[index], _tokenId[index]);
+		}
+	}
+
 	function setTokenURI(uint256 _tokenId, string _uri) public onlyAdmin {
 		super._setTokenURI(_tokenId, _uri);
 	}
