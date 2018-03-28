@@ -10,6 +10,7 @@ contract Collectibles is Ownable, ERC721Token {
 	struct TokenMetadata {
 		uint32 timestamp;
 		uint amount;
+		string currency;
 	}
 
 	// Optional mapping for token metadata
@@ -47,10 +48,10 @@ contract Collectibles is Ownable, ERC721Token {
 		adaptAdmin = _newAdmin;
 	}
 
-	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount) public canTransfer(_tokenId)  {
+	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string currency) public canTransfer(_tokenId)  {
 		TokenMetadata storage tm = metadata[_tokenId];
 		require(tm.timestamp == 0 && tm.amount == 0);
-		metadata[_tokenId] = TokenMetadata({timestamp : _timestamp, amount: _amount});
+		metadata[_tokenId] = TokenMetadata({timestamp : _timestamp, amount: _amount, currency: currency});
 	}
 
 	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint amount) {
