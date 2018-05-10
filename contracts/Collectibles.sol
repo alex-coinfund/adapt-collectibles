@@ -11,6 +11,7 @@ contract Collectibles is Ownable, ERC721Token {
 		uint32 timestamp;
 		uint amount;
 		string currency;
+		uint copy;
 	}
 
 	// Optional mapping for token metadata
@@ -30,8 +31,10 @@ contract Collectibles is Ownable, ERC721Token {
 		_;
 	}
 
-	function mint(address _to, uint256 _tokenId) public onlyAdmin {
+	function mint(address _to, uint256 _tokenId, uint _copy, string _uri) public onlyAdmin {
 		super._mint(_to, _tokenId);
+		super._setTokenURI(_tokenId, _uri);
+		metadata[_tokenId].copy = _copy;
 	}
 
 	function massMint(address[] _to, uint256 []_tokenId) public onlyAdmin {
@@ -48,10 +51,16 @@ contract Collectibles is Ownable, ERC721Token {
 		adaptAdmin = _newAdmin;
 	}
 
-	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string currency) public canTransfer(_tokenId)  {
+	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string _currency) public canTransfer(_tokenId)  {
 		TokenMetadata storage tm = metadata[_tokenId];
+
+		// this can be done once only
 		require(tm.timestamp == 0 && tm.amount == 0);
-		metadata[_tokenId] = TokenMetadata({timestamp : _timestamp, amount: _amount, currency: currency});
+
+		// update the metadata structure
+		metadata[_tokenId].timestamp = _timestamp;
+		metadata[_tokenId].amount = _amount;
+		metadata[_tokenId].currency = _currency;
 	}
 
 	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint amount) {

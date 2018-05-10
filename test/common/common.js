@@ -4,6 +4,7 @@ function accounts(rpc_accounts) {
 		ADAPT_OWNER: rpc_accounts[1],
 		ADAPT_ADMIN: rpc_accounts[2],
 		ADAPT_WALLET: rpc_accounts[3],
+		ACCOUNT1: rpc_accounts[4],
 	};
 }
 
