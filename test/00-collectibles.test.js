@@ -58,4 +58,31 @@ contract('Collectibles', function (rpc_accounts) {
 		assert.equal(metadata[0], 10000, 'unexpected timestamp');
 		assert.equal(metadata[1], 1, 'unexpected amount');
 	});
+
+	it('should let the owner to mass mint 10 copies of the very same token', async function () {
+		let jsonHash = web3.sha3("pic", "title", "description").slice(2);
+		let uri = 'https://adaptk.it/j/' + jsonHash;
+		console.log('uri: ', uri);
+		let result = await collectibles.massMint(ac.ADAPT_ADMIN, jsonHash, 0, 10, uri,
+			{from: ac.ADAPT_ADMIN, gas: 7000000}).should.be.fulfilled;
+		console.log('gas: ', result.receipt.gasUsed);
+
+		let balance = await collectibles.balanceOf(ac.ADAPT_ADMIN);
+		assert.equal(balance, 10, 'unexpected balance');
+	});
+
+	it('should let the owner to mass mint 10 more copies of the very same token', async function () {
+		let jsonHash = web3.sha3("pic", "title", "description").slice(2);
+		let uri = 'https://adaptk.it/j/' + jsonHash;
+		console.log('uri: ', uri);
+
+		let result = await collectibles.massMintTolerant(ac.ACCOUNT2, jsonHash, 5, 15, uri,
+			{from: ac.ADAPT_ADMIN, gas: 7000000}).should.be.fulfilled;
+
+		console.log('gas: ', result.receipt.gasUsed);
+
+
+		let balance = await collectibles.balanceOf(ac.ACCOUNT2);
+		assert.equal(balance, 10, 'unexpected balance');
+	});
 });
