@@ -31,10 +31,13 @@ contract Collectibles is Ownable, ERC721Token {
 		_;
 	}
 
-	function mint(address _to, uint256 _tokenId, uint _copy, string _uri) public onlyAdmin {
-		super._mint(_to, _tokenId);
-		super._setTokenURI(_tokenId, _uri);
-		metadata[_tokenId].copy = _copy;
+	function mint(address _to, string _jsonHash, uint _copy, string _uri) public onlyAdmin {
+		uint tokenId = uint(keccak256(_jsonHash, _copy));
+		super._mint(_to, tokenId);
+
+		// TODO: shall we concatenate uri with _jsonHash?
+		super._setTokenURI(tokenId, _uri);
+		metadata[tokenId].copy = _copy;
 	}
 
 	function massMint(
@@ -49,8 +52,7 @@ contract Collectibles is Ownable, ERC721Token {
 
 		uint copy_end = _copyStart + _copies;
 		for (uint copy = _copyStart; copy < copy_end; copy++) {
-			uint tokenId = uint(keccak256(_jsonHash, copy));
-			mint(_to, tokenId, copy, _uri);
+			mint(_to, _jsonHash, copy, _uri);
 		}
 	}
 
