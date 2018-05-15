@@ -45,6 +45,8 @@ contract Collectibles is Ownable, ERC721Token {
 		string _uri
 	) public onlyAdmin {
 
+		require(_copies <= 10);
+
 		uint copy_end = _copyStart + _copies;
 		for (uint copy = _copyStart; copy < copy_end; copy++) {
 			uint tokenId = uint(keccak256(_jsonHash, copy));
@@ -59,6 +61,8 @@ contract Collectibles is Ownable, ERC721Token {
 		uint _copies,
 		string _uri
 	) public onlyAdmin {
+
+		require(_copies <= 10);
 
 		uint copy_end = _copyStart + _copies;
 		for (uint copy = _copyStart; copy < copy_end; copy++) {

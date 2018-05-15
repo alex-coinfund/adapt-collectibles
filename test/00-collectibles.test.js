@@ -51,7 +51,6 @@ contract('Collectibles', function (rpc_accounts) {
 		assert.equal(balance, 2, 'unexpected balance');
 	});
 
-
 	it('should let token owner to set token metadata', async function () {
 		await collectibles.setTokenMetadata(0, 10000, 1, 1, {from: ac.ACCOUNT1, gas: 7000000}).should.be.fulfilled;
 		let metadata = await collectibles.getTokenMetadata(0);
@@ -76,13 +75,12 @@ contract('Collectibles', function (rpc_accounts) {
 		let uri = 'https://adaptk.it/j/' + jsonHash;
 		console.log('uri: ', uri);
 
-		let result = await collectibles.massMintTolerant(ac.ACCOUNT2, jsonHash, 5, 15, uri,
+		let result = await collectibles.massMintTolerant(ac.ACCOUNT2, jsonHash, 5, 10, uri,
 			{from: ac.ADAPT_ADMIN, gas: 7000000}).should.be.fulfilled;
 
 		console.log('gas: ', result.receipt.gasUsed);
 
-
 		let balance = await collectibles.balanceOf(ac.ACCOUNT2);
-		assert.equal(balance, 10, 'unexpected balance');
+		assert.equal(balance, 5, 'unexpected balance');
 	});
 });
