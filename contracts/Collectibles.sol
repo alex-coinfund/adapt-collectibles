@@ -31,12 +31,10 @@ contract Collectibles is Ownable, ERC721Token {
 		_;
 	}
 
-	function mint(address _to, string _jsonHash, uint _copy, string _uri) public onlyAdmin {
+	function mint(address _to, string _jsonHash, uint _copy) public onlyAdmin {
 		uint tokenId = uint(keccak256(_jsonHash, _copy));
 		super._mint(_to, tokenId);
-
-		// TODO: shall we concatenate uri with _jsonHash?
-		super._setTokenURI(tokenId, _uri);
+		super._setTokenURI(tokenId, _jsonHash);
 		metadata[tokenId].copy = _copy;
 	}
 
@@ -44,15 +42,14 @@ contract Collectibles is Ownable, ERC721Token {
 		address _to,
 		string _jsonHash,      // sha3(pic, title, description)
 		uint _copyStart,
-		uint _copies,
-		string _uri
+		uint _copiesCount
 	) public onlyAdmin {
 
-		require(_copies <= 10);
+		require(_copiesCount <= 10);
 
-		uint copy_end = _copyStart + _copies;
-		for (uint copy = _copyStart; copy < copy_end; copy++) {
-			mint(_to, _jsonHash, copy, _uri);
+		uint copyEnd = _copyStart + _copiesCount;
+		for (uint copy = _copyStart; copy < copyEnd; copy++) {
+			mint(_to, _jsonHash, copy);
 		}
 	}
 
@@ -60,21 +57,22 @@ contract Collectibles is Ownable, ERC721Token {
 		address _to,
 		string _jsonHash,      // sha3(pic, title, description)
 		uint _copyStart,
-		uint _copies,
-		string _uri
+		uint _copiesCount
 	) public onlyAdmin {
 
-		require(_copies <= 10);
+		require(_copiesCount <= 10);
 
-		uint copy_end = _copyStart + _copies;
-		for (uint copy = _copyStart; copy < copy_end; copy++) {
+		uint copyEnd = _copyStart + _copiesCount;
+		for (uint copy = _copyStart; copy < copyEnd; copy++) {
 			uint tokenId = uint(keccak256(_jsonHash, copy));
 
 			// skip tokens minted already
 			if(exists(tokenId))
 				continue;
 
-			mint(_to, tokenId, copy, _uri);
+			super._mint(_to, tokenId);
+			super._setTokenURI(tokenId, _jsonHash);
+			metadata[tokenId].copy = copy;
 		}
 	}
 
