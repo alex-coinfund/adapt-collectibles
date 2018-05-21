@@ -91,7 +91,7 @@ contract('Collectibles', function (rpc_accounts) {
 	it('should let the admin to mass mint 5 more copies of the very same token', async function () {
 		let jsonHash = web3.sha3("dog-pic", "dog", "nice-dog").slice(2);
 
-		let result = await collectibles.massMintTolerant(
+		let result = await collectibles.massMint(
 			ac.ACCOUNT2,
 			jsonHash,
 			5,

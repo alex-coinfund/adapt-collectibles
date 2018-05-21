@@ -49,21 +49,6 @@ contract Collectibles is Ownable, ERC721Token {
 
 		uint copyEnd = _copyStart + _copiesCount;
 		for (uint copy = _copyStart; copy < copyEnd; copy++) {
-			mint(_to, _jsonHash, copy);
-		}
-	}
-
-	function massMintTolerant(
-		address _to,
-		string _jsonHash,      // sha3(pic, title, description)
-		uint _copyStart,
-		uint _copiesCount
-	) public onlyAdmin {
-
-		require(_copiesCount <= 10);
-
-		uint copyEnd = _copyStart + _copiesCount;
-		for (uint copy = _copyStart; copy < copyEnd; copy++) {
 			uint tokenId = uint(keccak256(_jsonHash, copy));
 
 			// skip tokens minted already
