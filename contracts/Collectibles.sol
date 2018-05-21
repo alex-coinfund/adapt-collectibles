@@ -11,6 +11,7 @@ contract Collectibles is Ownable, ERC721Token {
 		uint32 timestamp;
 		uint amount;
 		string currency;
+		uint copy;
 	}
 
 	// Optional mapping for token metadata
@@ -30,15 +31,36 @@ contract Collectibles is Ownable, ERC721Token {
 		_;
 	}
 
-	function mint(address _to, uint256 _tokenId) public onlyAdmin {
-		super._mint(_to, _tokenId);
+	function mint(address _to, string _jsonHash, uint _copy) public onlyAdmin {
+		uint tokenId = uint(keccak256(_jsonHash, _copy));
+		super._mint(_to, tokenId);
+		super._setTokenURI(tokenId, _jsonHash);
+		metadata[tokenId].copy = _copy;
 	}
 
-	function massMint(address[] _to, uint256 []_tokenId) public onlyAdmin {
-		for(uint32 index=0; index<_to.length; index++) {
-			super._mint(_to[index], _tokenId[index]);
+	function massMint(
+		address _to,
+		string _jsonHash,      // sha3(pic, title, description)
+		uint _copyStart,
+		uint _copiesCount
+	) public onlyAdmin {
+
+		require(_copiesCount <= 10);
+
+		uint copyEnd = _copyStart + _copiesCount;
+		for (uint copy = _copyStart; copy < copyEnd; copy++) {
+			uint tokenId = uint(keccak256(_jsonHash, copy));
+
+			// skip tokens minted already
+			if(exists(tokenId))
+				continue;
+
+			super._mint(_to, tokenId);
+			super._setTokenURI(tokenId, _jsonHash);
+			metadata[tokenId].copy = copy;
 		}
 	}
+
 
 	function setTokenURI(uint256 _tokenId, string _uri) public onlyAdmin {
 		super._setTokenURI(_tokenId, _uri);
@@ -48,10 +70,16 @@ contract Collectibles is Ownable, ERC721Token {
 		adaptAdmin = _newAdmin;
 	}
 
-	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string currency) public canTransfer(_tokenId)  {
+	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string _currency) public canTransfer(_tokenId)  {
 		TokenMetadata storage tm = metadata[_tokenId];
+
+		// this can be done once only
 		require(tm.timestamp == 0 && tm.amount == 0);
-		metadata[_tokenId] = TokenMetadata({timestamp : _timestamp, amount: _amount, currency: currency});
+
+		// update the metadata structure
+		metadata[_tokenId].timestamp = _timestamp;
+		metadata[_tokenId].amount = _amount;
+		metadata[_tokenId].currency = _currency;
 	}
 
 	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint amount) {
