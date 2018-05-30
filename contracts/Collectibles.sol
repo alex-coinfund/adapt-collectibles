@@ -80,9 +80,18 @@ contract Collectibles is ERC721Token, Ownable {
 		metadata[_tokenId].donation = _donation;
 	}
 
-	function getTokenMetadata(uint _tokenId) public view returns (uint timestamp, uint donation) {
+	function getTokenMetadata(uint _tokenId) public view
+		returns (
+			uint timestamp,
+			uint donation,
+			uint copy) {
+
 		require(exists(_tokenId));
 		TokenMetadata storage tm = metadata[_tokenId];
-		return (tm.timestamp, tm.donation);
+		return (
+			tm.timestamp,
+			tm.donation,
+			tm.copy
+		);
 	}
 }
