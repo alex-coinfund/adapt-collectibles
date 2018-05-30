@@ -6,7 +6,7 @@ import {ERC721ReceiverMock} from '../zeppelin/contracts/mocks/ERC721ReceiverMock
 import {ERC721TokenMock} from '../zeppelin/contracts/mocks/ERC721TokenMock.sol';
 
 contract MockInclude {
-	function MockInclude() public {
+	constructor() public {
 
 	}
 }

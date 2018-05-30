@@ -1,23 +1,22 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.23;
 
-import {Ownable} from '../zeppelin/contracts/ownership/Ownable.sol';
 import {ERC721Token} from '../zeppelin/contracts/token/ERC721/ERC721Token.sol';
+import {Ownable} from '../zeppelin/contracts/ownership/Ownable.sol';
 
-contract Collectibles is Ownable, ERC721Token {
+contract Collectibles is ERC721Token, Ownable {
 
 	address public adaptAdmin;
 
 	struct TokenMetadata {
 		uint32 timestamp;
-		uint amount;
-		string currency;
+		uint donation;
 		uint copy;
 	}
 
 	// Optional mapping for token metadata
 	mapping(uint256 => TokenMetadata) internal metadata;
 
-	function Collectibles(
+	constructor(
 		address _adaptOwner,
 		address _adaptAdmin) public
 		ERC721Token("AdaptThankYou", "ADPT") {
@@ -32,7 +31,7 @@ contract Collectibles is Ownable, ERC721Token {
 	}
 
 	function mint(address _to, string _jsonHash, uint _copy) public onlyAdmin {
-		uint tokenId = uint(keccak256(_jsonHash, _copy));
+		uint tokenId = uint(keccak256(abi.encodePacked(_jsonHash, _copy)));
 		super._mint(_to, tokenId);
 		super._setTokenURI(tokenId, _jsonHash);
 		metadata[tokenId].copy = _copy;
@@ -49,7 +48,7 @@ contract Collectibles is Ownable, ERC721Token {
 
 		uint copyEnd = _copyStart + _copiesCount;
 		for (uint copy = _copyStart; copy < copyEnd; copy++) {
-			uint tokenId = uint(keccak256(_jsonHash, copy));
+			uint tokenId = uint(keccak256(abi.encodePacked(_jsonHash, copy)));
 
 			// skip tokens minted already
 			if(exists(tokenId))
@@ -70,21 +69,20 @@ contract Collectibles is Ownable, ERC721Token {
 		adaptAdmin = _newAdmin;
 	}
 
-	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _amount, string _currency) public canTransfer(_tokenId)  {
+	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _donation) public canTransfer(_tokenId)  {
 		TokenMetadata storage tm = metadata[_tokenId];
 
 		// this can be done once only
-		require(tm.timestamp == 0 && tm.amount == 0);
+		require(tm.timestamp == 0 && tm.donation == 0);
 
 		// update the metadata structure
 		metadata[_tokenId].timestamp = _timestamp;
-		metadata[_tokenId].amount = _amount;
-		metadata[_tokenId].currency = _currency;
+		metadata[_tokenId].donation = _donation;
 	}
 
-	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint amount) {
+	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint donation) {
 		require(exists(_tokenId));
 		TokenMetadata storage tm = metadata[_tokenId];
-		return (tm.timestamp, tm.amount);
+		return (tm.timestamp, tm.donation);
 	}
 }

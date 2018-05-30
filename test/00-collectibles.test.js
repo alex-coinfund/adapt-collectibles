@@ -60,7 +60,7 @@ contract('Collectibles', function (rpc_accounts) {
 		// get token id by owner and index
 		let tokenId = await collectibles.tokenOfOwnerByIndex(ac.ACCOUNT1, 0);
 
-		await collectibles.setTokenMetadata(tokenId, 10000, 1, 1, {from: ac.ACCOUNT1, gas: 7000000}).should.be.fulfilled;
+		await collectibles.setTokenMetadata(tokenId, 10000, 1, {from: ac.ACCOUNT1, gas: 7000000}).should.be.fulfilled;
 		let metadata = await collectibles.getTokenMetadata(tokenId);
 		assert.equal(metadata[0], 10000, 'unexpected timestamp');
 		assert.equal(metadata[1], 1, 'unexpected amount');
