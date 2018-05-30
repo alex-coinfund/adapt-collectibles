@@ -8,13 +8,13 @@ contract Collectibles is ERC721Token, Ownable {
 	address public adaptAdmin;
 
 	struct TokenMetadata {
-		uint32 timestamp;
+		uint timestamp;
 		uint donation;
 		uint copy;
 	}
 
 	// Optional mapping for token metadata
-	mapping(uint256 => TokenMetadata) internal metadata;
+	mapping(uint => TokenMetadata) internal metadata;
 
 	constructor(
 		address _adaptOwner,
@@ -61,7 +61,7 @@ contract Collectibles is ERC721Token, Ownable {
 	}
 
 
-	function setTokenURI(uint256 _tokenId, string _uri) public onlyAdmin {
+	function setTokenURI(uint _tokenId, string _uri) public onlyAdmin {
 		super._setTokenURI(_tokenId, _uri);
 	}
 
@@ -69,7 +69,7 @@ contract Collectibles is ERC721Token, Ownable {
 		adaptAdmin = _newAdmin;
 	}
 
-	function setTokenMetadata(uint256 _tokenId, uint32 _timestamp, uint _donation) public canTransfer(_tokenId)  {
+	function setTokenMetadata(uint _tokenId, uint _timestamp, uint _donation) public canTransfer(_tokenId)  {
 		TokenMetadata storage tm = metadata[_tokenId];
 
 		// this can be done once only
@@ -80,7 +80,7 @@ contract Collectibles is ERC721Token, Ownable {
 		metadata[_tokenId].donation = _donation;
 	}
 
-	function getTokenMetadata(uint256 _tokenId) public view returns (uint32 timestamp, uint donation) {
+	function getTokenMetadata(uint _tokenId) public view returns (uint timestamp, uint donation) {
 		require(exists(_tokenId));
 		TokenMetadata storage tm = metadata[_tokenId];
 		return (tm.timestamp, tm.donation);
