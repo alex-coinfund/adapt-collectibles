@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 import {ERC721Token} from '../zeppelin/contracts/token/ERC721/ERC721Token.sol';
 import {Ownable} from '../zeppelin/contracts/ownership/Ownable.sol';
 
-contract Collectibles is ERC721Token, Ownable {
+contract AdaptCollectibles is ERC721Token, Ownable {
 
 	address public adaptAdmin;
 

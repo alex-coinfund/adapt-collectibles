@@ -3,7 +3,7 @@ require('babel-polyfill');
 
 import EVMRevert from "../zeppelin/test/helpers/EVMRevert";
 import {accounts} from './common/common';
-const Collectibles = artifacts.require("../contracts/Collectibles.sol");
+const AdaptCollectibles = artifacts.require("../contracts/AdaptCollectibles.sol");
 
 let Promise = require('bluebird');
 const BigNumber = web3.BigNumber;
@@ -15,7 +15,7 @@ const should = require('chai')
 	.should();
 
 
-contract('Collectibles', function (rpc_accounts) {
+contract('AdaptCollectibles', function (rpc_accounts) {
 
 	let ac = accounts(rpc_accounts);
 
@@ -25,7 +25,7 @@ contract('Collectibles', function (rpc_accounts) {
 	let collectibles = null;
 
 	it('should be able to deploy the Collectibles contract and set initial state', async function () {
-		collectibles = await Collectibles.new(
+		collectibles = await AdaptCollectibles.new(
 			ac.ADAPT_OWNER,
 			ac.ADAPT_ADMIN,
 			{from: ac.DEPLOY_OPERATOR, gas: 7000000}
